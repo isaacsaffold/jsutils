@@ -153,9 +153,9 @@ export class Queue
  * "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness#Same-value-zero_equality"
  * for a description of this algorithm.
  *
- * A hash table is used internally, and thus the time complexity of some operations is O(an) in the worst case, where
- * `a` is the average time complexity and `n` is the size of the queue. However, the worst case is so rare that it need
- * not be taken into account for most practical purposes.
+ * A hash table is used internally, and thus the worst case time complexity of operations that are O(f(n)) on average
+ * are often O(nf(n)) in the worst case, where `n` is the size of the queue. However, the worst case is so rare that it
+ * need not be taken into account in most cases.
  */
 export class TrackerQueue extends Queue
 {
