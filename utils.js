@@ -4,22 +4,27 @@ function identity(x) {return x;}
  * An implementation of the binary search algorithm, extended to allow "rounding".
  *
  * When `op` equals '==', the index of `val`'s location in `seq` is returned, or -1 if `val` is not contained in `seq`.
- * When `op` equals '<=' or '>=', if `val` is contained in `seq`, the index of its location is returned. If not, the index
- * of the greatest element of `seq` less than `val`, or the least element of `seq` greater than `val`, respectively, is
- * returned. In this case, the return value may equal -1 or `seq.length` if it is less than or greater than every element
- * in `seq`.
+ *
+ * When `op` equals '<=' or '>=', if `val` is contained in `seq`, the index of its location is returned. If not, the
+ * index of the greatest element of `seq` less than `val`, or the least element of `seq` greater than `val`,
+ * respectively, is returned. In this case, the return value may equal -1 or `seq.length` if it is less than or greater
+ * than every element in `seq`. If `seq` is empty, -1 is returned.
  *
  * `seq` must be indexable for this function to work properly.
  */
 export function binarySearch(seq, val, op = '==', key = identity)
 {
-	var start = 0, stop = seq.length;
+	if (!seq.length)
+		return -1;
+	let start = 0, stop = seq.length, mid;
+	let valKey = key(val), midKey;
 	while (stop - start > 0)
 	{
-		var mid = Math.trunc((start + stop) / 2);
-		if (val == key(seq[mid]))
+		mid = Math.trunc((start + stop) / 2);
+		midKey = key(seq[mid]);
+		if (valKey == midKey)
 			return mid;
-		else if (val < key(seq[mid]))
+		else if (valKey < midKey)
 			stop = mid;
 		else
 			start = mid + 1;
@@ -29,9 +34,9 @@ export function binarySearch(seq, val, op = '==', key = identity)
 		case '==':
 			return -1;
 		case '<=':
-			return key(seq[mid]) < val ? mid : mid - 1;
+			return midKey < valKey ? mid : mid - 1;
 		case '>=':
-			return key(seq[mid]) > val ? mid : mid + 1;
+			return midKey > valKey ? mid : mid + 1;
 		default:
 			throw new Error(`'${op}' is not a valid operator.`);
 	}
