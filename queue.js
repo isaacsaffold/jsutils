@@ -44,12 +44,21 @@ export class Queue
 
     _expand()
     {
-        let newArray = new Array(this._array.length * 2);
-        let i = 0;
-        for (let item of this)
-            newArray[i++] = item;
-        this._array = newArray;
-        this._frontIndex = 0, this._backIndex = this._size - 1;
+        let oldLength = this._array.length;
+        this._array.length *= 2;
+        if (this._backIndex < this._frontIndex)
+        {
+            if (oldLength - this._frontIndex > this.backIndex + 1)
+            {
+                this._array.copyWithin(this._frontIndex + oldLength, this._frontIndex, oldLength);
+                this._frontIndex += oldLength;
+            }
+            else
+            {
+                this._array.copyWithin(oldLength, 0, this._backIndex + 1);
+                this._backIndex += oldLength;
+            }
+        }
     }
 
     [Symbol.iterator]()
@@ -95,7 +104,8 @@ export class Queue
         {
             if (this._size === this._array.length)
                 this._expand();
-            this._array[++this._backIndex % this._array.length] = item;
+            this._backIndex = (this._backIndex + 1) % this._array.length;
+            this._array[this._backIndex] = item;
         }
         ++this._size;
     }
@@ -128,17 +138,36 @@ export class Queue
     remove(index)
     {
         let item = this.at(index);
-        if (item !== undefined)
+        if (item === undefined)
+            return undefined;
+        if (this._size > 1)
         {
-            for (let i = index - 1; i >= 0; --i)
+            let i = (this._frontIndex + index) % this._array.length;
+            if (this._backIndex >= this._frontIndex)
             {
-                let k = (this._frontIndex + i) % this._array.length;
-                this._array[(k + 1) % this._array.length] = this._array[k];
+                if (i < (this._frontIndex + this._backIndex) / 2)
+                {
+                    this._array.copyWithin(this._frontIndex + 1, this._frontIndex, i);
+                    ++this._frontIndex;
+                }
+                else
+                {
+                    this._array.copyWithin(i, i + 1, this._backIndex + 1);
+                    --this._backIndex;
+                }
             }
-            if (this._size > 1)
-                this._frontIndex = (this._frontIndex + 1) % this._array.length;
-            --this._size;
+            else if (i >= this._frontIndex)
+            {
+                this._array.copyWithin(this._frontIndex + 1, this._frontIndex, i);
+                ++this._frontIndex;
+            }
+            else
+            {
+                this._array.copyWithin(i, i + 1, this._backIndex + 1);
+                --this._backIndex;
+            }
         }
+        --this._size;
         return item;
     }
 }
