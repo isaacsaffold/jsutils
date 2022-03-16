@@ -170,6 +170,16 @@ export class Queue
         --this._size;
         return item;
     }
+    
+    /*
+     * Removes all items from the queue.
+     *
+     * Takes O(1) time.
+     */
+    clear()
+    {
+        this._frontIndex = this._backIndex = this._size = 0;
+    }
 }
 
 /*
@@ -263,5 +273,15 @@ export class TrackerQueue extends Queue
         }
         else
             return -1;
+    }
+    
+    /*
+     * Takes the same amount of time as `Map.prototype.clear`, for a `Map` that has as many elements as are in this
+     * queue.
+     */
+    clear()
+    {
+        super.clear();
+        this._tracker.clear();
     }
 }
