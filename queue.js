@@ -229,7 +229,8 @@ export class TrackerQueue extends Queue
     pop()
     {
         let popped = super.pop();
-        this._tracker.delete(this._key(popped));
+        if (popped !== undefined)
+            this._tracker.delete(this._key(popped));
         return popped;
     }
 
