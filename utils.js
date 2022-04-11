@@ -3,7 +3,8 @@ function identity(x) {return x;}
 /*
  * An implementation of the binary search algorithm, extended to allow "rounding".
  *
- * When `op` equals '==', the index of `val`'s location in `seq` is returned, or -1 if `val` is not contained in `seq`.
+ * When `op` equals '===', the index of `val`'s location in `seq` is returned, or -1 if `val` is not contained in
+ * `seq`.
  *
  * When `op` equals '<=' or '>=', if `val` is contained in `seq`, the index of its location is returned. If not, the
  * index of the greatest element of `seq` less than `val`, or the least element of `seq` greater than `val`,
@@ -12,7 +13,7 @@ function identity(x) {return x;}
  *
  * `seq` must be indexable for this function to work properly.
  */
-export function binarySearch(seq, val, op = '==', key = identity)
+export function binarySearch(seq, val, op = '===', key = identity)
 {
 	if (!seq.length)
 		return -1;
@@ -22,7 +23,7 @@ export function binarySearch(seq, val, op = '==', key = identity)
 	{
 		mid = Math.trunc((start + stop) / 2);
 		midKey = key(seq[mid]);
-		if (valKey == midKey)
+		if (valKey === midKey)
 			return mid;
 		else if (valKey < midKey)
 			stop = mid;
@@ -31,7 +32,7 @@ export function binarySearch(seq, val, op = '==', key = identity)
 	}
 	switch (op)
 	{
-		case '==':
+		case '===':
 			return -1;
 		case '<=':
 			return midKey < valKey ? mid : mid - 1;
