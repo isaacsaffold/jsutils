@@ -180,6 +180,11 @@ export class Queue
     {
         this._frontIndex = this._backIndex = this._size = 0;
     }
+    
+    toString()
+    {
+        return Array.from(this).toString();
+    }
 }
 
 /*
